@@ -1,24 +1,22 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import os
 
 
+def download_file(url, file_path):
+    print(url, file_path)
+    if os.path.exists(file_path):
+        os.remove(file_path)
+    template = "wget '{}' -O '{}'"
+    os.system(template.format(url, file_path))
+
+
 def download_github_code(path):
-    filename = path.rsplit("/")[-1]
-    os.system("shred -u {}".format(filename))
     course = 'bayesian-methods-for-ml'
     branch = 'master'
     url = 'https://raw.githubusercontent.com/hse-aml/{}/{}/{}'
-    template = "wget '" + url + "' -O '{}'"
-    os.system(template.format(course, branch, path, filename))
-
-
-def download_github_lfs(path):
-    filename = path.rsplit("/")[-1]
-    os.system("shred -u {}".format(filename))
-    course = 'bayesian-methods-for-ml'
-    branch = 'master'
-    url = "https://github.com/hse-aml/{}/blob/{}/{}?raw=true"
-    template = "wget '" + url + "' -O '{}'"
-    os.system(template.format(course, branch, path, filename))
+    file_path = path.rsplit("/")[-1]
+    download_file(url.format(course, branch, path), file_path)
 
 
 def load_data_week2():
@@ -42,4 +40,8 @@ def load_data_week6():
 
 def load_data_final_project():
     download_github_code("week7_(final_project)/utils.py")
-    download_github_lfs("week7_(final_project)/CelebA_VAE_small_8.h5")
+    download_file(
+        "https://github.com/hse-aml/bayesian-methods-for-ml/"
+        "releases/download/v0.1/CelebA_VAE_small_8.h5",
+        "week7_(final_project)/CelebA_VAE_small_8.h5"
+    )
