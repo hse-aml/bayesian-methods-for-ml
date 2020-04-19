@@ -2,6 +2,7 @@ from collections import OrderedDict
 import json
 import requests
 import numpy as np
+import warnings
 
 
 class EMGrader(object):
@@ -73,9 +74,16 @@ class EMGrader(object):
         )
 
     def submit_e_step(self, output):
+        if not np.allclose(np.sum(output, axis=-1), 1):
+            warnings.warn('gamma probabilities do not sum to one!')
         self.submit_part('H3evn', str(self.ravel_output(output[9, 1])))
 
     def submit_m_step(self, pi, mu, sigma):
+        if not np.allclose(sigma[0], sigma[0].T):
+            warnings.warn(
+                'sigma[0, :, :] is not symmetric! '
+                'Check that the outer product between vectors is '
+                'correct (consider using np.outer).')
         self.submit_part('uD8jo', str(self.ravel_output(mu[1, 1])))
         self.submit_part('zFWgm', str(self.ravel_output(sigma[1, 1, 1])))
         self.submit_part('gTUuu', str(self.ravel_output(pi[1])))
@@ -84,4 +92,8 @@ class EMGrader(object):
         self.submit_part('0ZlqN', str(self.ravel_output(loss)))
 
     def submit_EM(self, best_loss):
+        if not np.isscalar(best_loss):
+            warnings.warn(
+                'The loss should be a scalar '
+                '(loss from the best restart), not an array.')
         self.submit_part('Olbrx', str(self.ravel_output(best_loss)))
