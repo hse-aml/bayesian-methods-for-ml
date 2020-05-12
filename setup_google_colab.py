@@ -43,5 +43,5 @@ def load_data_final_project():
     download_file(
         "https://github.com/hse-aml/bayesian-methods-for-ml/"
         "releases/download/v0.1/CelebA_VAE_small_8.h5",
-        "week7_(final_project)/CelebA_VAE_small_8.h5"
+        "CelebA_VAE_small_8.h5"
     )
